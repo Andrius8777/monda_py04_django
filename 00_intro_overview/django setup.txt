@@ -15,7 +15,7 @@ new django project tutorial
 13. modifikuojam ji, irasydami kodo gabaliuka pacioj pabaigoj:
 """
 try:
-	from local_settings import*
+	from .local_settings import*
 except ImportError:
 	pass
 """
