@@ -15,7 +15,6 @@ class Project(models.Model):
 
     class Meta:
         verbose_name = _("project")
-        
         verbose_name_plural = _("projects")
         ordering = ['name']
 
@@ -45,14 +44,12 @@ class Task(models.Model):
     updated_at = models.DateTimeField(_("updated at"), auto_now=True, db_index=True)
     is_done = models.BooleanField(_("is done"), default=False, db_index=True)
     deadline = models.DateTimeField(_("deadline"), null=True, blank=True, db_index=True)
-    
-    
+
     class Meta:
         verbose_name = _("task")
         verbose_name_plural = _("tasks")
         ordering = ['is_done', '-created_at']
-        
-        
+
     def __str__(self):
         return self.name
 

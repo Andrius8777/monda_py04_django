@@ -1,16 +1,17 @@
-<!DOCTYPE html>
+<!DOCTYPE html>{% load static i18n %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}TASKer{% endblock title %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
     <header>
         <span class="logo">TASKer</span>
         <ul class="nav">
-            <li><a href="{% url "index" %}">Dashboard</a></li>
-            <li><a href="{% url "task_list" %}">Tasks</a></li>
+            <li><a href="{% url "index" %}">{% trans "dashboard"|capfirst %}</a></li>
+            <li><a href="{% url "task_list" %}">{% trans "tasks"|capfirst %}</a></li>
         </ul>
     </header>
     <section class="messages">
@@ -19,5 +20,11 @@
         {% endfor %}
     </section>
     <main>{% block content %}{% endblock content %}</main>
+    <footer>
+        {% block footer %}{% endblock footer %}
+        <p>&copy; 2024 PTU20 
+            <a style="float:right;" href="https://discord.gg/ywbbZPcY">{% trans "community on discord" %}</a>
+        </p>
+    </footer>
 </body>
 </html>
