@@ -3,7 +3,34 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import gettext_lazy as _
 from . import models
-#
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin #class base views sablonai
+from django.views import generic
+from django.urls import reverse
+
+
+class ProjectListView(generic.ListView):
+    model = models.Project                             #nusirodom modeli
+    template_name = 'tasks/project_list.html'          #nusirodom tempalte
+
+class ProjectDetailView(generic.DetailView):
+    model = models.Project
+    template_name = 'tasks/project_detail.html'
+
+
+class ProjectCreateView(LoginRequiredMixin, generic.CreateView):    #LoginRequiredMixin turi eiti pirmas
+    model = models.Project                                          #nusirodom modeli
+    template_name = 'tasks/project_create.html'                     #nusirodom templagte name
+    fields = ('name', )                                             #nusirodo laukus kokius useris pildys
+    
+    def get_success_url(self) -> str:                               #modifikuojam 2 metodus
+        messages.success(self.request, 
+            _('project created succesfully').capitalize())          #ismesim zinute 
+        return reverse('project_list')
+    
+    def form_valid(self, form):                                     #jeigu forma bus teisingai uzpildyta 
+        form.instance.owner = self.request.user                     #ja pasieksim tik self.request.user              return super().form_valid(form)
+
+
 def index(request: HttpRequest) -> HttpResponse:
     context = {
         'projects_count': models.Project.objects.count(),
