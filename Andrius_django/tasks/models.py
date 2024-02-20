@@ -3,7 +3,6 @@ from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
-
 class Project(models.Model):
     name = models.CharField(_("name"), max_length=100, db_index=True)
     owner = models.ForeignKey(

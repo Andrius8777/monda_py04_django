@@ -3,7 +3,7 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import gettext_lazy as _
 from . import models
-
+#
 def index(request: HttpRequest) -> HttpResponse:
     context = {
         'projects_count': models.Project.objects.count(),
