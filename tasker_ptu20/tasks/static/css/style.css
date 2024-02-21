@@ -209,6 +209,10 @@ button:hover, .button:hover {
     display: inline;
 }
 
-.toolbar form select {
+.toolbar form select, .toolbar form input {
     padding: 0.4rem;
+}
+
+div.tube {
+    padding: 1rem;
 }
