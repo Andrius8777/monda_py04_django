@@ -192,3 +192,7 @@ button:hover, .button:hover {
 .toolbar form select {
     padding: 0.4rem;
 }
+
+.toolbar form select, .toolbar form input {
+    padding: 0.4rem;
+}
