@@ -6,11 +6,26 @@ from . import models
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin #class base views sablonai
 from django.views import generic
 from django.urls import reverse
+from django.contrib.auth import get_user_model
+from typing import Any
+from django.db.models.query import QuerySet
 
 
 class ProjectListView(generic.ListView):
     model = models.Project                             #nusirodom modeli
     template_name = 'tasks/project_list.html'          #nusirodom tempalte
+    
+    def get_queryset(self) -> QuerySet[Any]:
+        queryset = super().get_queryset()
+        if self.request.GET.get('owner'):
+            queryset = queryset.filter(owner__username=self.request.GET.get('owner'))
+        return queryset
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['user_list'] = get_user_model().objects.all()
+        return context
+    
 
 class ProjectDetailView(generic.DetailView):
     model = models.Project
@@ -29,6 +44,39 @@ class ProjectCreateView(LoginRequiredMixin, generic.CreateView):    #LoginRequir
     
     def form_valid(self, form):                                     #jeigu forma bus teisingai uzpildyta 
         form.instance.owner = self.request.user                     #ja pasieksim tik self.request.user              return super().form_valid(form)
+        return super().form_valid(form)                                                            #
+
+class ProjectUpdateView(LoginRequiredMixin,
+        UserPassesTestMixin,
+        generic.UpdateView,
+    ):
+    model = models.Project
+    template_name = 'tasks/project_update.html'
+    fields = ('name', )
+
+    def get_success_url(self) -> str:
+        messages.success(self.request, 
+            _('project updated succesfully').capitalize())
+        return reverse('project_list')
+
+    def test_func(self) -> bool | None:
+        return self.get_object().owner == self.request.user or self.request.user.is_superuser
+    
+    
+class ProjectDeleteView(LoginRequiredMixin,
+        UserPassesTestMixin,
+        generic.DeleteView,
+    ):
+    model = models.Project
+    template_name = 'tasks/project_delete.html'
+
+    def get_success_url(self) -> str:
+        messages.success(self.request, 
+            _('project deleted succesfully').capitalize())
+        return reverse('project_list')
+
+    def test_func(self) -> bool | None:
+        return self.get_object().owner == self.request.user or self.request.user.is_superuser
 
 
 def index(request: HttpRequest) -> HttpResponse:
